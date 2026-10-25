@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "api-contract-testing"
+version = "1.0.0"
+description = "Pytest suite for a REST API: OpenAPI contract checks, functional flows, validation, auth and latency budgets."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "sami1507" }]
+keywords = ["api", "testing", "pytest", "openapi", "contract-testing", "qa"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Framework :: Pytest",
+    "Topic :: Software Development :: Testing",
+]
+dependencies = [
+    "fastapi>=0.115",
+    "pydantic>=2.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "httpx>=0.27",
+    "jsonschema>=4.22",
+    "ruff>=0.6",
+]
+
+[project.urls]
+Repository = "https://github.com/sami1507/api-contract-testing"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+    "smoke: quick checks that the service is up and serving data",
+    "contract: responses match the published OpenAPI document",
+    "negative: invalid input is rejected with the right status and message",
+    "auth: API key rules for write operations",
+    "performance: latency budgets for read endpoints",
+]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
