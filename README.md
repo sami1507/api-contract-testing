@@ -22,6 +22,27 @@ The system under test is a small bookstore API built with FastAPI. It runs in-pr
 
 The contract tests use the API's own generated OpenAPI document as the source of truth. When a model changes, the response schemas change with it, and the tests keep following the contract instead of hard-coded expectations.
 
+## Run the API locally
+
+The same application the tests exercise can be served with uvicorn:
+
+```bash
+python -m pip install -e ".[dev]"
+uvicorn bookstore.main:app --port 8000
+```
+
+Then, from another terminal:
+
+```bash
+curl http://127.0.0.1:8000/health
+curl "http://127.0.0.1:8000/books?genre=technology"
+curl -X POST http://127.0.0.1:8000/books \
+  -H "X-API-Key: change-me" -H "Content-Type: application/json" \
+  -d '{"title": "Testing Without Tears", "author": "Sam Reyes", "isbn": "9780000001009", "genre": "technology", "year": 2024, "price": 29.5}'
+```
+
+The POST example fails with a 409 if that ISBN is already in use. Interactive documentation is at `http://127.0.0.1:8000/docs`. Set `BOOKSTORE_API_KEY` to replace the default `change-me` key.
+
 ## Quick start
 
 ```bash
